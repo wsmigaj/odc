@@ -28,6 +28,8 @@ MergeTool.h
 #ODA2RequestTool.h
 ODAHeaderTool.cc
 ODAHeaderTool.h
+OrderColumnsTool.cc
+OrderColumnsTool.h
 SQLTool.cc
 SQLTool.h
 SetTool.cc

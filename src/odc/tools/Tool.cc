@@ -26,6 +26,7 @@
 #include "odc/tools/MDSetTool.h"
 #include "odc/tools/MergeTool.h"
 #include "odc/tools/ODAHeaderTool.h"
+#include "odc/tools/OrderColumnsTool.h"
 #include "odc/tools/SQLTool.h"
 #include "odc/tools/SetTool.h"
 #include "odc/tools/SplitTool.h"
@@ -56,7 +57,8 @@ void Tool::registerTools()
 	static ToolFactory<LSTool> lsTool("ls");
 	static ToolFactory<MDSetTool> mdset("mdset");
 	static ToolFactory<MergeTool> mergeTool("merge");
-	static ToolFactory<HeaderTool> odaHeader("header");
+    static ToolFactory<OrderColumnsTool> orderColumns("ordercolumns");
+    static ToolFactory<HeaderTool> odaHeader("header");
 	static ToolFactory<SQLTool> sqlTool("sql");
 	static ToolFactory<SetTool> set("set");
 	static ToolFactory<SplitTool> split("split");
