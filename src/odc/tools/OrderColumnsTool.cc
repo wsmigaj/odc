@@ -169,7 +169,6 @@ void reorderColumns(const PathName &inFile, const PathName &outFile,
   }
 }
 
-
 } // namespace
 
 OrderColumnsTool::OrderColumnsTool (int argc, char *argv[]) : Tool(argc, argv) { }
@@ -190,7 +189,10 @@ void OrderColumnsTool::run()
   PathName inFile = parameters(1);
   PathName outFile = parameters(2);
 
+  // Find the column order that will minimise the number of values that need to be encoded
+  // (by moving the most frequently varying columns to the end).
   const std::vector<std::string> optimalColumnOrder = findOptimalColumnOrder(inFile);
+  // Read data from the input file and write them to the output file in the optimum column order.
   reorderColumns(inFile, outFile, optimalColumnOrder);
 }
 
