@@ -32,7 +32,7 @@ public:
   static void usage(const std::string& name, std::ostream &o);
 };
 
-template <> struct ExperimentalTool<OrderColumnsTool> { enum { experimental = true }; };
+template <> struct ExperimentalTool<OrderColumnsTool> { enum { experimental = false }; };
 
 } // namespace tool 
 } // namespace odc 
