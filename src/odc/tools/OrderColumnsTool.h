@@ -25,13 +25,11 @@ public:
   OrderColumnsTool(const OrderColumnsTool &) = delete;
   OrderColumnsTool &operator=(const OrderColumnsTool &) = delete;
 
-	void run(); 
+  void run();
 
-	static void help(std::ostream &o)
-  { o << "Reduce file size and read time by ordering columns by increasing variability"; }
+  static void help(std::ostream &o);
 
-	static void usage(const std::string& name, std::ostream &o)
-	{ o << name << " <input.odb> <output.odb>"; }
+  static void usage(const std::string& name, std::ostream &o);
 };
 
 template <> struct ExperimentalTool<OrderColumnsTool> { enum { experimental = true }; };

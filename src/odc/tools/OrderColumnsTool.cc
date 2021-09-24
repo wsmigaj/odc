@@ -82,7 +82,8 @@ std::vector<std::string> findOptimalColumnOrder(const PathName &inFile) {
 
   std::cout << "Number of value changes in each column:\n";
   for (const std::string &name : columnNamesInOriginalOrder)
-    std::cout << name << ": " << numValueChangesInColumn.at(name) << "\n";
+    std::cout << "  " << name << ": " << numValueChangesInColumn.at(name) << "\n";
+  std::cout << std::endl;
 
   struct ColumnStats {
     std::string name;
@@ -102,11 +103,14 @@ std::vector<std::string> findOptimalColumnOrder(const PathName &inFile) {
   for (const ColumnStats &stat : stats)
     optimalColumnOrder.push_back(stat.name);
 
-  std::cout << "Optimal column order:\n";
-  for (const ColumnStats &stat : stats)
-    std::cout << stat.name << "\n";
-
   return optimalColumnOrder;
+}
+
+void printOptimalColumnOrder(const std::vector<std::string> &columns) {
+  std::cout << "Optimal column order:\n";
+  for (const std::string &column : columns)
+    std::cout << "  " << column << "\n";
+  std::cout << std::endl;
 }
 
 void reorderColumns(const PathName &inFile, const PathName &outFile,
@@ -173,28 +177,45 @@ void reorderColumns(const PathName &inFile, const PathName &outFile,
 
 OrderColumnsTool::OrderColumnsTool (int argc, char *argv[]) : Tool(argc, argv) { }
 
-void OrderColumnsTool::run()
-{
-  if (parameters().size() != 3)
+void OrderColumnsTool::run() {
+  if (parameters().size() != 2 && parameters().size() != 3)
   {
     Log::error() << "Usage: ";
     usage(parameters(0), Log::error());
     Log::error() << std::endl;
-    throw UserError("Expected exactly 3 command line parameters");
+    throw UserError("Expected 2 or 3 command line parameters");
   }
 
   api::Settings::treatIntegersAsDoubles(false);
   api::Settings::setDoubleMissingValue(2147483647.0);
 
   PathName inFile = parameters(1);
-  PathName outFile = parameters(2);
 
   // Find the column order that will minimise the number of values that need to be encoded
   // (by moving the most frequently varying columns to the end).
   const std::vector<std::string> optimalColumnOrder = findOptimalColumnOrder(inFile);
+  printOptimalColumnOrder(optimalColumnOrder);
   // Read data from the input file and write them to the output file in the optimum column order.
-  reorderColumns(inFile, outFile, optimalColumnOrder);
+  if (parameters().size() == 3) {
+    PathName outFile = parameters(2);
+    reorderColumns(inFile, outFile, optimalColumnOrder);
+  }
 }
+
+void OrderColumnsTool::help(std::ostream &o) {
+  o << "Determines column order likely to minimize file size and read time.";
+}
+
+void OrderColumnsTool::usage(const std::string& name, std::ostream &o) {
+  o << name << " <input.odb> [<output.odb>]\n\n"
+       "  <input.odb>:  Name of the input file.\n"
+       "  <output.odb>: Name of the output file. Optional; if provided, the tool\n"
+       "                will not only determine and print the optimal column order\n"
+       "                for the data loaded from the input file, but also write an\n"
+       "                output file containing the same data as the input file,\n"
+       "                but with columns rearranged in that order.";
+}
+
 
 } // namespace tool 
 } // namespace odc 
